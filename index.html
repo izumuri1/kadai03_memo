@@ -58,7 +58,7 @@
           onclick="goToScreen4()"
           class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
         >
-          新規メニュー登録<<<工事中>>>
+          新規メニュー登録
         </button>
                 <!-- 日本人は料理頑張り過ぎ的な思いを込めたメッセージ -->
         <div id="" class="container mt-10 bg-white opacity-70">
@@ -374,7 +374,8 @@
       ***********************************************************************************************/
       $(document).ready(function () {
         $("#register").on("click", function () {
-          saveRecipe(); // メニュー登録ボタンがクリックされたときに実行
+          saveRecipe(); // メニューを保存
+          clearForm(); // フォームをクリア
         });
       });
 
@@ -413,6 +414,11 @@
 
         alert("レシピが保存されました！"); // 成功メッセージ
       }
+
+        function clearForm() {
+          $("#titleInput, #servingsInput").val(""); // タイトルと人数をクリア
+          $("#ingredientsBody, #cooksBody").empty(); // 食材・調味料と調理工程の行を削除
+        }
 
       /***********************************************************************************************
       関数定義：画面間の移動
