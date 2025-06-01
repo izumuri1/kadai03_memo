@@ -23,14 +23,9 @@
       padding-top: 70px; /* タイトルの高さ分の余白を確保し、裏に回り込むのを防ぐ */
     }
     ol {
-      list-style-type: decimal !important; /* 数字付きリストを強制適用 */
+      list-style-type: decimal !important;
+      padding-left: 1rem !important;
     }
-    li {
-      list-style-type: none; /* `li` に余計なリストスタイルが適用されないようにする */
-    }
-
-
-
     </style>
   </head>
 
@@ -63,7 +58,7 @@
           onclick="goToScreen4()"
           class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
         >
-          新規メニュー登録
+          新規メニュー登録<<<工事中>>>
         </button>
                 <!-- 日本人は料理頑張り過ぎ的な思いを込めたメッセージ -->
         <div id="" class="container mt-10 bg-white opacity-70">
@@ -161,10 +156,45 @@
       <div id="screen4" class="screen hidden">
         <p class="text-lg font-bold"></p>
         <!-- 登録したいメニューの入力 -->
-        <<<工事中>>>
+        <h2 class="mt-2 font-bold">メニューを登録してください</h2>
+        <table class="gap-32">
+          <tr class=""><td class="w-[240px] h-[50px] bg-gray-100 font-bold">タイトル</td>
+            <td class="w-[360px]"><input type="text" id="titleInput" class="ml-[10px] w-[300px] p-[5px]" placeholder="メニュータイトルを入力"></td></tr>
+          <tr class=""><td class="w-[240px] h-[50px] bg-gray-100 font-bold">人数</td>
+            <td class="w-[360px]"><input type="number" id="servingsInput" class="ml-[10px] w-[300px] p-[5px]" placeholder="何人前かを数字で入力"></td></tr>
+        </table>
+        
+        <table id="ingredientsTable" class="w-full max-w-lg mx-auto overflow-x-auto">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="w-[200px] p-[5px]">食材・調味料</th>
+              <th class="w-[200px] p-[5px]">分量</th>
+              <th class="w-[100px] p-[5px]">単位</th>
+              <th class="w-[80px] p-[5px]"></th> <!-- 削除ボタンの列 -->
+            </tr>
+          </thead>
+          <tbody id="ingredientsBody">
+            <!-- JavaScriptで追加される行 -->
+          </tbody>
+        </table>
+        <button onclick="addIngredientRow()" class="mt-2 bg-pink-500 text-white px-3 py-2 rounded mx-auto block">追加</button>
+
+        <table id="cooksTable" class="w-full max-w-lg mx-auto overflow-x-auto">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="w-[500px] p-[5px]">調理工程</th>
+              <th class="w-[80px] p-[5px]"></th> <!-- 削除ボタンの列 -->
+            </tr>
+          </thead>
+          <tbody id="cooksBody">
+            <!-- JavaScriptで追加される行 -->
+          </tbody>
+        </table>
+        <button onclick="addCookRow()" class="mt-2 bg-pink-500 text-white px-3 py-2 rounded mx-auto block">追加</button>
+        
         <!-- メニュー登録ボタン -->
         <button
-          id=""
+          id="register"
           class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
         >
           メニュー登録
@@ -212,14 +242,14 @@
                 "卵をボウルに割り入れ調味料入れ混ぜ合わせ、白身を断ち切る。",
                 "卵を焼く前に、キッチンペーパーに油を吸わせ、焼く途中に油を補充するためのものを用意する。",
                 "卵焼き器に油小さじ1/2を加えて火にかける（隅や角にも油を流してなじませる）。",
-                "火加減は終始弱めの中火で、箸先で卵液を落としたときに“ジュ”っと、一瞬で卵液が固まる熱さになっているかを確認する。",
+                "火加減は終始弱めの中火で、箸先で卵液を落としたときにジュっと、一瞬で卵液が固まる熱さになっているかを確認する。",
                 "卵液の1/3量ほどを入れて全体に広げ、焼けてきたら1回目は粗く巻いてOKなので、奥側に卵を巻いてまとめる（そのあとに手前にさっと油をひく）。",
                 "残りの卵液の半量を空いたところに流し入れ、奥の卵の下に箸を入れて持ち上げ、卵焼きの下にも卵液を流し入れる。",
                 "半熟より少し固まってきたタイミングで卵を巻き、卵を奥に移動する。残りの卵液を流し入れ、再び同じことを繰り返す。",
-                "合計4、5回に分けて焼く。",
+                "合計4、5回に分けて焼く。"
               ],
-              memo:"",
-              review:""
+              memo:"xx",
+              review:"xx"
             },
             {
               title: "マカロニサラダ",
@@ -241,13 +271,13 @@
                 },
               ],
               cook: [
-                "1．玉ねぎはスライサーで薄切りにし、水に晒して水気を絞る。ピクルスは2㎜の輪切りにする。ハムは食べ易い大きさに切る。",
-                "2．マカロニを茹でる。表示時間の1.5倍茹で、ザルにあげ、粗熱を取る。",
-                "3．ボウルに茹で卵を加えて粗く潰す。調味料Ａを加えて混ぜ合わせ、1・2も加えてザックリ混ぜる。",
-                "4．器に盛り、粗挽き胡椒を振る。",
+                "玉ねぎはスライサーで薄切りにし、水に晒して水気を絞る。ピクルスは2㎜の輪切りにする。ハムは食べ易い大きさに切る。",
+                "マカロニを茹でる。表示時間の1.5倍茹で、ザルにあげ、粗熱を取る。",
+                "ボウルに茹で卵を加えて粗く潰す。調味料Ａを加えて混ぜ合わせ、1・2も加えてザックリ混ぜる。",
+                "器に盛り、粗挽き胡椒を振る。",
               ],
-              memo:"",
-              review:""
+              memo:"xx",
+              review:"xx"
             },
           ];
 
@@ -340,6 +370,51 @@
       });
 
       /***********************************************************************************************
+      ボタンクリック時の処理 新規メニュー登録：register
+      ***********************************************************************************************/
+      $(document).ready(function () {
+        $("#register").on("click", function () {
+          saveRecipe(); // メニュー登録ボタンがクリックされたときに実行
+        });
+      });
+
+      function saveRecipe() {
+        let title = $("#titleInput").val();
+        let servings = $("#servingsInput").val();
+
+        let ingredients = [];
+        $("#ingredientsBody tr").each(function () {
+          let ingredient = $(this).find("input:eq(0)").val();//配列の一つ目の要素の値を取得
+          let amount = $(this).find("input:eq(1)").val();//二つ目の要素の値を取得
+          let unit = $(this).find("input:eq(2)").val();//三つ目の要素の値を取得
+          if (ingredient) {
+            ingredients.push({ ingredient, amount, unit });
+          }
+        });
+
+        let cookSteps = [];
+        $("#cooksBody tr").each(function () {
+          let step = $(this).find("textarea").val();
+          if (step) {
+            cookSteps.push(step);
+          }
+        });
+
+        let newRecipe = {
+          title,
+          servings,
+          ingredients,
+          cook: cookSteps
+        };
+
+        let recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+        recipes.push(newRecipe);
+        localStorage.setItem("recipes", JSON.stringify(recipes));
+
+        alert("レシピが保存されました！"); // 成功メッセージ
+      }
+
+      /***********************************************************************************************
       関数定義：画面間の移動
       ***********************************************************************************************/
       // 初期画面➡新規メニュー登録画面
@@ -373,9 +448,9 @@
       関数定義：選択メニューの表示
       ***********************************************************************************************/
       function displayRecipeDetails(recipe) {
-        let html = `<h2 class="text-xl font-bold">${recipe.title}</h2>`;
+        let html = `<h2 class="text-xl font-bold bg-pink-100">${recipe.title}</h2>`;
         html += `<p>人数: ${recipe.servings} 人前</p>`;
-        html += `<h3 class="font-bold mt-2">食材:</h3><ul>`;
+        html += `<h3 class="font-bold mt-2 bg-pink-100">食材:</h3><ul>`;
 
         recipe.ingredients.forEach((ing) => {
             let amountDisplay = ing.amount == null || ing.amount === "" 
@@ -387,20 +462,56 @@
             html += `<li>${ing.ingredient}: ${amountDisplay}${ing.unit}</li>`;
         });
 
-        html += `</ul><h3 class="font-bold mt-2">作り方:</h3><ol class="text-left list-decimal">`;
+        html += `</ul><h3 class="font-bold mt-2 bg-pink-100">作り方:</h3><ol class="text-left">`;
 
         recipe.cook.forEach((step) => {
-          html += `<li>${step}</li>`;
+          html += `<li class="px-2">${step}</li>`;
         });
+        console.log(recipe.cook); // cook配列が正しく入っているかチェック
+        
 
         html += `</ol>`;
 
-        html += `<p class="font-bold">メモ:</p>`;
-        html += `<p> ${recipe.memo} </p>`;
-        html += `<p class="font-bold">評価:</p>`;
+        html += `<p class="font-bold mt-2 bg-pink-100">メモ:</p>`;
+        html += `<p class="text-left"> ${recipe.memo} </p>`;
+        html += `<p class="font-bold mt-2 bg-pink-100">評価:</p>`;
         html += `<p> ${recipe.review} </p>`;
         $("#menuDetails").html(html).removeClass("hidden"); // メニュー情報を追加＆表示
       }
+
+      /***********************************************************************************************
+      関数定義：新規メニュー登録（食材・調味料の登録行追加・削除）
+      ***********************************************************************************************/
+      function addIngredientRow() {
+        $("#ingredientsBody").append(`
+          <tr>
+            <td><input type="text" class="w-[80%] p-[5px]" placeholder="食材・調味料"></td>
+            <td><input type="number" class="w-[80%] p-[5px]" placeholder="分量" step="0.01"></td>
+            <td><input type="text" class="w-[80%] p-[5px]" placeholder="単位"></td>
+            <td><button class="remove-btn bg-red-500 text-white px-3 py-1 rounded">削除</button></td>
+          </tr>
+        `);
+      }
+
+      $(document).on("click", ".remove-btn", function () {
+        $(this).closest("tr").remove();
+      });
+
+      /***********************************************************************************************
+      関数定義：新規メニュー登録（調理工程の登録行追加・削除）
+      ***********************************************************************************************/
+      function addCookRow() {
+        $("#cooksBody").append(`
+          <tr>
+            <td><textarea class="w-full p-[5px] border border-gray-300 resize-y min-h-[100px]" placeholder="調理工程"></textarea></td>
+            <td><button class="remove-btn bg-red-500 text-white px-3 py-1 rounded">削除</button></td>
+          </tr>
+        `);
+      }
+
+      $(document).on("click", ".remove-btn", function () {
+        $(this).closest("tr").remove();
+      });
 
     </script>
   </body>
