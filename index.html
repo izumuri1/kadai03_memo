@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>きょうなに作る？日々悩むあなたに</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* コンテンツの高さにあわせた背景画像の適用 */
+      #container {
+        overflow: auto; /* はみ出しを防ぎつつ、スクロールを有効にする */
+        max-height: 100vh; /* 画面いっぱいの高さを確保 */
+        min-height: auto; /* デフォルトの高さではなく、コンテンツ量に応じる */
+      }
+      /* スクロールバーを完全に非表示にする */
+      #container::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* 背景画像のみ透過を適用 */
+      #container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("src/dish.jpg");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.6; /* 背景画像のみ透過 */
+        z-index: -1; /* 背景を背面に配置 */
+        border-radius: 12px; /* container の角丸と統一 */
+        height: auto; /* 背景の高さをコンテンツに合わせる */
+        min-height: 100vh; /* 画面の最低限の高さを確保 */
+      }
+      /* 検索結果表示の方法（幅など）を統一 */
+      #resultContainer {
+        width: 100%;
+        max-width: 600px;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      /* 検索結果が表示されたときに適用するクラス */
+      .search-active {
+        background-color: white; /* 検索時のみ白い背景を適用 */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 少し影を追加して視認性向上 */
+      }
+      /* タイトルの高さ以上の余白を確保 */
+      #menuDetails {
+        margin-top: 80px;
+      }
+      
+    </style>
+  </head>
+
+  <body
+    class="w-full h-screen bg-gray-100 flex flex-col items-center justify-start min-h-screen p-4"
+  >
+    <div
+      id="container"
+      class="w-full max-w-md md:max-w-lg lg:max-w-xl flex-grow p-6 relative rounded-lg shadow-lg text-center flex flex-col justify-center min-h-screen"
+    >
+      <!-- タイトル -->
+      <h1
+        class="text-2xl text-white font-bold p-[10px] bg-green-500 rounded shadow-xl p-4 "
+      >
+        きょうなに作る？日々悩むあなたに
+      </h1>
+
+      <!-- 初期画面 -->
+      <div id="screen1" class="screen">
+        <p class="text-lg font-bold"></p>
+        <!-- メニュー検索ボタン -->
+        <button
+          onclick="goToScreen2()"
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          メニュー検索
+        </button>
+        <!-- 新規メニュー登録ボタン -->
+        <button
+          onclick="goToScreen4()"
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          新規メニュー登録
+        </button>
+        <!-- 日本人は料理頑張り過ぎ的な思いを込めたメッセージ -->
+        <div id="" class="container mt-10 bg-white opacity-70">
+          <h2 id="" class="font-bold">世界の料理・・・ドイツのKaltes Essen</h2>
+          <p id="" class="text-left px-2 text-justify indent-4">
+            <span style="display: block"
+              >冷たい食事という意味ですが、火を使わずに簡単に準備ができる軽めの食事をいいます。
+              ハムやソーセージ、チーズとパンなどが主で、ジャムやバター、お好みで軽いサラダやピクルスなども。
+              テーブルに並べ、家族がそれぞれ好きなものを取りながら挟んだり、塗ったりして食事をします。<br
+            /></span>
+            <span style="display: block"
+              >準備は、食材をテーブルに並べるだけ！5～10分あれば済んでしまいます。買い物や下ごしらえの手間もありません。
+              昼にしっかりと食べ、朝と夕食は軽めに済ませる人が多いドイツですが、<span
+                class="font-bold underline"
+                >家事の負担を軽くし夜は家族でゆったりと過ごすためでもあります。</span
+              ></span
+            >
+            <span style="display: block"
+              >★★★本当はランダムで各国の料理事情を表示したいが、一旦固定メッセージにとどめる★★★</span
+            >
+          </p>
+        </div>
+      </div>
+
+      <!-- メニュー検索画面 -->
+      <div id="screen2" class="screen hidden">
+        <p class="text-lg font-bold"></p>
+        <div class="flex flex-col items-center space-y-4">
+          <!-- 検索窓：入力フォーム -->
+          <input
+            type="text"
+            id="searchWord"
+            class="my-3 p-2"
+            placeholder="検索ワードを入力"
+          />
+          <!-- 検索ボタン -->
+          <button
+            id="search"
+            class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+          >
+            検索
+          </button>
+          <!-- 検索ワードのクリアボタン -->
+          <button
+            id="wordClear"
+            class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+          >
+            検索ワードのクリア
+          </button>
+          <!-- 検索結果表示＋メニュー選択 -->
+          <p id="resultContainer" class=""></p>
+
+          <!-- ★★★恐らく没にする箇所 -->
+          <!-- 選択したメニューを表示するボタン
+          <button
+            onclick="goToScreen3()"
+            class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+          >
+            選択したメニューを表示
+          </button> -->
+
+          <!-- 最初に戻るボタン -->
+          <button
+            onclick="goToScreen1()"
+            class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+          >
+            最初に戻る
+          </button>
+        </div>
+      </div>
+
+      <!-- メニュー表示画面 -->
+      <div id="screen3" class="screen hidden">
+        <p class="text-lg font-bold"></p>
+        <!-- 選択したメニューの表示 -->
+        <div id="menuDetails" class="hidden p-4 bg-white rounded shadow-lg">
+          <!-- ここにJavaScriptでメニュー詳細情報が追加される -->
+        </div>
+        <!-- メニュー更新ボタン -->
+        <button
+          id=""
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          メニュー更新
+        </button>
+        <!-- メニュー削除ボタン -->
+        <button
+          id=""
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          メニュー削除
+        </button>
+        <!-- 検索画面に戻るボタン -->
+        <button
+          onclick="goToScreen2()"
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          検索に戻る
+        </button>
+        <!-- 最初に戻るボタン -->
+        <button
+          onclick="goToScreen1()"
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          最初に戻る
+        </button>
+      </div>
+
+      <!-- 新規メニュー登録画面 -->
+      <div id="screen4" class="screen hidden">
+        <p class="text-lg font-bold"></p>
+        <!-- 登録したいメニューの入力 -->
+        ★★★
+        <!-- メニュー登録ボタン -->
+        <button
+          id=""
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          メニュー登録
+        </button>
+        <!-- 最初に戻るボタン -->
+        <button
+          onclick="goToScreen1()"
+          class="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded hover:bg-green-300"
+        >
+          最初に戻る
+        </button>
+      </div>
+    </div>
+
+    <footer
+      class="w-full max-w-md md:max-w-lg lg:max-w-xl p-1 bg-white rounded-lg shadow-lg text-center mt-2"
+    >
+      &copy; 2025 Izumi Yoshida<br />背景画像：freepik.com
+    </footer>
+
+    <script>
+      /***********************************************************************************************
+      グローバル変数定義
+      ***********************************************************************************************/
+      const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+
+      /***********************************************************************************************
+      初期メニュー登録：ローカルストレージへのセーブ
+      ***********************************************************************************************/
+      $(document).ready(function () {
+        // ローカルストレージに "recipes" があるか確認
+        if (!localStorage.getItem("recipes")) {
+          // 初期データ
+          const recipes = [
+            {
+              title: "厚焼き玉子",
+              servings: 3,
+              ingredients: [
+                { ingredient: "卵", amount: 3, unit: "個" },
+                { ingredient: "油", amount: "", unit: "適宜" },
+                { ingredient: "砂糖", amount: 1, unit: "大さじ" },
+                { ingredient: "醤油", amount: 1, unit: "小さじ" },
+              ],
+              cook: [
+                "卵をボウルに割り入れ調味料入れ混ぜ合わせ、白身を断ち切る。",
+                "卵を焼く前に、キッチンペーパーに油を吸わせ、焼く途中に油を補充するためのものを用意する。",
+                "卵焼き器に油小さじ1/2を加えて火にかける（隅や角にも油を流してなじませる）。",
+                "火加減は終始弱めの中火で、箸先で卵液を落としたときに“ジュ”っと、一瞬で卵液が固まる熱さになっているかを確認する。",
+                "卵液の1/3量ほどを入れて全体に広げ、焼けてきたら1回目は粗く巻いてOKなので、奥側に卵を巻いてまとめる（そのあとに手前にさっと油をひく）。",
+                "残りの卵液の半量を空いたところに流し入れ、奥の卵の下に箸を入れて持ち上げ、卵焼きの下にも卵液を流し入れる。",
+                "半熟より少し固まってきたタイミングで卵を巻き、卵を奥に移動する。残りの卵液を流し入れ、再び同じことを繰り返す。",
+                "合計4、5回に分けて焼く。",
+              ],
+            },
+            {
+              title: "マカロニサラダ",
+              servings: 3,
+              ingredients: [
+                { ingredient: "マカロニ", amount: 100, unit: "g" },
+                { ingredient: "ハム", amount: 100, unit: "g" },
+                { ingredient: "玉ねぎ", amount: 1 / 3, unit: "個" },
+                { ingredient: "ピクルス", amount: 5, unit: "本" },
+                { ingredient: "ゆで卵", amount: 4, unit: "個" },
+                { ingredient: "調味料A", amount: "", unit: "" },
+                { ingredient: "マヨネーズ", amount: 4, unit: "大さじ" },
+                { ingredient: "白ワインビネガー", amount: 1.5, unit: "小さじ" },
+                { ingredient: "砂糖", amount: 1, unit: "小さじ" },
+                {
+                  ingredient: "塩・胡椒・粗挽き胡椒",
+                  amount: "",
+                  unit: "適宜",
+                },
+              ],
+              cook: [
+                "1．玉ねぎはスライサーで薄切りにし、水に晒して水気を絞る。ピクルスは2㎜の輪切りにする。ハムは食べ易い大きさに切る。",
+                "2．マカロニを茹でる。表示時間の1.5倍茹で、ザルにあげ、粗熱を取る。",
+                "3．ボウルに茹で卵を加えて粗く潰す。調味料Ａを加えて混ぜ合わせ、1・2も加えてザックリ混ぜる。",
+                "4．器に盛り、粗挽き胡椒を振る。",
+              ],
+            },
+          ];
+
+          // JSONに変換してローカルストレージへ保存
+          localStorage.setItem("recipes", JSON.stringify(recipes));
+          console.log("初期データをローカルストレージへ保存しました！");
+        } else {
+          console.log("ローカルストレージには既にデータがあります！");
+        }
+      });
+
+      /***********************************************************************************************
+      ボタンクリック時の処理 検索ボタン：search
+      ***********************************************************************************************/
+      $("#search").on("click", function () {
+        // 検索開始をもって背景画像を変更
+        $("#resultContainer").addClass("search-active");
+        // 検索開始前に最新のレシピデータを取得
+        const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+        // 入力フォームの検索ワードを取得
+        const searchWord = $("#searchWord").val().trim();
+
+        // 検索ワードが空の場合は処理をしない
+        if (searchWord === "") {
+          alert("検索ワードを入力してください");
+          console.log("検索ワードを入力してください");
+          return;
+        }
+
+        // 検索ワードが含まれているレシピを抽出
+        const matchedRecipes = recipes.filter(
+          (recipe) =>
+            recipe.title.includes(searchWord) ||
+            (recipe.ingredients && recipe.ingredients.some((ing) =>
+              ing.ingredient.includes(searchWord)
+            )) ||
+            (recipe.cook && recipe.cook.some((step) => step.includes(searchWord)))
+        );
+
+        // 検索結果のタイトルを表示
+
+        if (matchedRecipes.length > 0) {
+          const titles = matchedRecipes.map((recipe) => recipe.title);
+          console.log("ヒットしたレシピ:", titles.join(", "));
+          $("#resultContainer").html("<ul></ul>");
+          matchedRecipes.forEach((recipe) => {
+            $("#resultContainer ul").append(
+              `<li class="text-lg font-bold p-2 rounded-lg">
+                <button class="recipe-item text-blue-600 underline" data-title="${recipe.title}">
+                  ${recipe.title} （${recipe.servings}人前）
+                </button>
+              </li>`
+            );
+          });
+        } else {
+          console.log("検索ワードにはヒットしませんでした");
+          alert("検索ワードにはヒットしませんでした");
+        }
+      });
+
+      /***********************************************************************************************
+      ボタンクリック時の処理 検索結果で表示されたメニューの選択：.recipe-item
+      ***********************************************************************************************/
+      $(document).on("click", ".recipe-item", function () {
+        const selectedTitle = $(this).data("title"); // クリックされたメニューのタイトルを取得
+
+        // 最新のレシピデータを取得（毎回最新データを検索）
+        const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+
+        // 選択されたメニューの詳細情報を検索
+        const selectedRecipe = recipes.find(function (recipe) {
+          return recipe.title === selectedTitle;
+        });
+
+        if (selectedRecipe) {
+          displayRecipeDetails(selectedRecipe); // 詳細画面に情報をセット
+          goToScreen3(); // メニュー詳細画面へ遷移
+        }
+      });
+
+      /***********************************************************************************************
+      ボタンクリック時の処理 検索ワードのクリア：wordClear
+      ***********************************************************************************************/
+      $("#wordClear").on("click", function () {
+        $("#searchWord").val("");
+        // 検索結果を完全にクリア
+        $("#resultContainer").html("");
+        // 検索終了をもって背景画像を戻し
+        $("#resultContainer").removeClass("search-active");
+      });
+
+      /***********************************************************************************************
+      関数定義：画面間の移動
+      ***********************************************************************************************/
+      // 初期画面➡新規メニュー登録画面
+      function goToScreen4() {
+        $("#screen1").addClass("hidden");
+        $("#screen4").removeClass("hidden");
+      }
+
+      // 初期画面➡メニュー検索画面
+      function goToScreen2() {
+        $("#screen1").addClass("hidden");
+        $("#screen3").addClass("hidden");
+        $("#screen2").removeClass("hidden");
+      }
+
+      // メニュー検索画面➡メニュー表示画面
+      function goToScreen3() {
+        $("#screen2").addClass("hidden");
+        $("#screen3").removeClass("hidden");
+      }
+
+      // 各画面➡初期画面（最初に戻る）
+      function goToScreen1() {
+        $("#screen2").addClass("hidden");
+        $("#screen3").addClass("hidden");
+        $("#screen4").addClass("hidden");
+        $("#screen1").removeClass("hidden");
+      }
+
+      /***********************************************************************************************
+      関数定義：選択メニューの表示
+      ***********************************************************************************************/
+      function displayRecipeDetails(recipe) {
+        let html = `<h2 class="text-xl font-bold">${recipe.title}</h2>`;
+        html += `<p>人数: ${recipe.servings} 人前</p>`;
+        html += `<h3 class="font-bold mt-2">食材:</h3><ul>`;
+
+        recipe.ingredients.forEach((ing) => {
+          html += `<li>${ing.ingredient}: ${ing.amount}${ing.unit}</li>`;
+        });
+
+        html += `</ul><h3 class="font-bold mt-2">作り方:</h3><ol>`;
+
+        recipe.cook.forEach((step) => {
+          html += `<li>${step}</li>`;
+        });
+
+        html += `</ol>`;
+
+        $("#menuDetails").html(html).removeClass("hidden"); // メニュー情報を追加＆表示
+      }
+
+    </script>
+  </body>
+</html>
